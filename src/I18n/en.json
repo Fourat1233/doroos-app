@@ -1,0 +1,54 @@
+
+{
+    "screens":{
+        "home": "Home",
+        "search": "Search",
+        "profile": "Profile",
+        "teachers": "List"
+    },
+    "home": {
+        "key" : "home page",
+        "popular-subject": "Popular Subjects",
+        "popular-teacher": "Recommended Teachers"
+    },
+    "search": {
+        "key" : "Search",
+        "choose": "Choose Subjects",
+        "gender": "Gender",
+        "pricing": "Pricing (QR)",
+        "areas": "Teaching Area (s)"
+    },
+    "sign": {
+        "sign-up": "Sign Up",
+        "sign-in": "Sign In",
+        "contact": "Contact Us",
+        "free-registration": "Free registration",
+        "support": "24/7 support",
+        "no-account": "If you don't have account create now.",
+        "password": "Password",
+        "email": "Email",
+        "name": "Full Name",
+        "phone": "Phone Number",
+        "type": "Account Type",
+        "gender": "Gender",
+        "student": "Student",
+        "teacher": "Teacher",
+        "male": "Male",
+        "female": "Female"
+    },
+    "drawer" :{
+        "welcome": "Welcome To Doroos App",
+        "subWelcome": "Login or create you account free now",
+        "changeLanguage": "Change Language",
+        "signout": "Sign Out",
+        "create": "Create Profile",
+        "profile": "My Profile",
+        "password": "Edit Password"
+    },
+    "tabs" : {
+        "1": "Subjects",
+        "2": "Nearby Teatchers",
+        "3": "About",
+        "4": "Contact"
+    }
+}
