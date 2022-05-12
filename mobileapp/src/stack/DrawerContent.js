@@ -35,8 +35,9 @@ export function DrawerContent(props) {
   };
 
   const SignOut = async () => {
-    await AsyncStorage.removeItem('user');
-    RNRestart.Restart();
+    await AsyncStorage.clear(() => {
+      RNRestart.Restart();
+    });
   };
 
   useEffect(() => {
@@ -219,7 +220,10 @@ export function DrawerContent(props) {
                   ...fonts.cairoSemiBold,
                 }}
                 onPress={() => {
-                  navigation.navigate('Home', {screen: 'SignIn'});
+                  while(navigation.canGoBack()){
+                    navigation.goBack()
+                  }
+                  navigation.navigate('SignIn');
                 }}
               />
             ) : null}
@@ -233,7 +237,7 @@ export function DrawerContent(props) {
                   ...fonts.cairoSemiBold,
                 }}
                 onPress={() => {
-                  navigation.navigate('Home', {screen: 'SignUp'});
+                  navigation.navigate('SignUp');
                 }}
               />
             ) : null}

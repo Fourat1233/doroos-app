@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -13,8 +13,6 @@ import {HomeScreen} from '../screens/Home/HomeScreen';
 import HomeSearchScreen from '../screens/Home/HomeSearchScreen';
 import TeachersScreen from '../screens/Teachers';
 import TeachersListMaps from '../screens/Teachers/TeachersListMaps';
-import SignUpScreen from '../screens/AuthScreens/SignUp/SignUpScreen';
-import SignInScreen from '../screens/AuthScreens/SignIn/SignInScreen';
 import {SearchScreen} from '../screens/Search/SearchScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
 import {BySubjectsScreen} from '../screens/Teachers/BySubjectsScreen';
@@ -25,10 +23,15 @@ import SecondStepComponent from '../screens/CreateProfile/SecondStepScreen';
 import ThirdStepComponent from '../screens/CreateProfile/ThirdStepScreen';
 import FourthStepComponent from '../screens/CreateProfile/FourthStepScreen';
 import {SearchProvider} from '../screens/Search/context';
+import Drawer from 'react-native-drawer';
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import AsyncStorage from '@react-native-community/async-storage';
+import {useTranslation} from 'react-i18next';
 
+const MainStack = createStackNavigator();
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-const Drawer = createDrawerNavigator();
+//const Drawer = createDrawerNavigator();
 
 const styles = StyleSheet.create({
   gradient: {
@@ -69,22 +72,6 @@ function HomeStack() {
           headerBackground: headerBg,
           headerBackTitleVisible: false,
         }}
-      />
-      <Stack.Screen
-        name="SignUp"
-        options={{
-          headerBackground: headerBg,
-          headerBackTitleVisible: false,
-        }}
-        component={SignUpScreen}
-      />
-      <Stack.Screen
-        name="SignIn"
-        options={{
-          headerBackground: headerBg,
-          headerBackTitleVisible: false,
-        }}
-        component={SignInScreen}
       />
       <Stack.Screen
         name="Profile"
@@ -246,6 +233,8 @@ function ListStack() {
 }
 
 function NavigationTabs() {
+  const {t, i18n} = useTranslation();
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -270,8 +259,9 @@ function NavigationTabs() {
         name="Home"
         component={HomeStack}
         options={({route}) => ({
+          headerShown: false,
           tabBarVisible: route.state && route.state.index === 0,
-          tabBarLabel: 'Home',
+          tabBarLabel: t('home'),
           tabBarIcon: ({color, size}) => (
             <AntDesign name="home" color={color} size={size} />
           ),
@@ -282,8 +272,9 @@ function NavigationTabs() {
         name="Search"
         component={SearchStack}
         options={({route}) => ({
+          headerShown: false,
           tabBarVisible: route.state && route.state.index === 0,
-          tabBarLabel: 'Search',
+          tabBarLabel: t('search'),
           tabBarIcon: ({color, size}) => (
             <Ionicons name="md-search" color={color} size={size} />
           ),
@@ -294,8 +285,9 @@ function NavigationTabs() {
         name="List"
         component={ListStack}
         options={({route}) => ({
+          headerShown: false,
           tabBarVisible: route.state && route.state.index === 0,
-          tabBarLabel: 'Home',
+          tabBarLabel: t('list'),
           tabBarIcon: ({color, size}) => (
             <Entypo name="list" color={color} size={size} />
           ),
@@ -316,14 +308,51 @@ function NavigationTabs() {
   );
 }
 
-function MyDrawer() {
-  return (
-    <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-      <Drawer.Screen name="Main" component={NavigationTabs} />
-    </Drawer.Navigator>
-  );
-}
+// function MyDrawer() {
+//   return (
+//     <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+//       <Drawer.Screen name="Main" component={NavigationTabs} />
+//     </Drawer.Navigator>
+//   );
+// }
 
 export default NavigationStack = () => {
-  return <MyDrawer />;
+  const [open, setOpen] = useState(false);
+  const [language, setLanguage] = useState('en');
+
+  const STORAGE_KEY = '@APP:languageCode';
+
+  useEffect(() => {
+    (async () => {
+      const l = await AsyncStorage.getItem(STORAGE_KEY);
+      if (l) {
+        setLanguage(l);
+      }
+    })();
+  }, []);
+
+  return (
+    <GestureRecognizer
+      style={{flex: 1}}
+      onSwipeRight={() => {
+        console.log('test');
+        console.log(language);
+        console.log('test');
+        if (language === 'en') setOpen(true);
+      }}
+      onSwipeLeft={() => {
+        if (language === 'ar') setOpen(true);
+      }}>
+      <Drawer
+        onClose={() => {
+          setOpen(false);
+        }}
+        content={<DrawerContent />}
+        tapToClose={true}
+        openDrawerOffset={0.3}
+        open={open}>
+        <NavigationTabs />
+      </Drawer>
+    </GestureRecognizer>
+  );
 };

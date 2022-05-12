@@ -13,7 +13,7 @@ export const Subjects = ({ subjects }) => {
         <View style={{ marginLeft: 10 }}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 {subjects.map((elm) => (
-                    <TouchableOpacity key={elm.id} style={styles.cardTop} key={elm.id}>
+                    <TouchableOpacity key={elm.id} style={styles.cardTop}>
                         <Image
                             style={[styles.picture, { padding: 20, }]}
                             source={{uri: `http://10.0.2.2:8000/uploads/subjects/${elm.icon_url}`}}
