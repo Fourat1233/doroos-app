@@ -28,7 +28,6 @@
 //     }
 //   }
 
-
 //   return (
 //     <View style={styles.container}>
 //       <LinearGradient
@@ -217,13 +216,13 @@
 //   },
 // });
 
-import React from 'react'
-import { View, Text } from 'react-native'
+import React from 'react';
+import {View, Text} from 'react-native';
 
-export default HomeSearchScreen = () => {
-	return (
-		<View>
-			<Text>testing</Text>
-		</View>
-	)
-}
+export default () => {
+  return (
+    <View>
+      <Text>testing</Text>
+    </View>
+  );
+};

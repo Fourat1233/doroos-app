@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
   Image,
 } from 'react-native';
-import {observer} from 'mobx-react-lite';
 import {colors, INPUT_HEIGHT, fonts} from '../../../assets/styles/theme';
 import * as yup from 'yup';
 import {Formik} from 'formik';
@@ -21,7 +20,7 @@ import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {register} from '../../shared/hooks';
 
-export default SignUpComponent = () => {
+export default function SignUpComponent() {
   const authStore = useContext(AuthContext);
   const [gender, setGender] = React.useState(null);
   const [accountType, setAccountType] = React.useState(null);
@@ -31,6 +30,7 @@ export default SignUpComponent = () => {
   const {t, i18n} = useTranslation();
 
   const _handleSubmit = async values => {
+    setLoading(true);
     if (gender === null) {
       setGenderError(true);
     }
@@ -44,6 +44,8 @@ export default SignUpComponent = () => {
       navigation.navigate('SignIn');
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -428,7 +430,7 @@ export default SignUpComponent = () => {
       </SafeAreaView>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

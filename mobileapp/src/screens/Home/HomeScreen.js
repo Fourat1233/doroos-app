@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -29,8 +29,16 @@ export const HomeScreen = () => {
   } = usePopularFetch('load_popular');
   const {t, i18n} = useTranslation();
   const navigation = useNavigation();
+  const [text, setText] = useState();
 
   const clickSignUpHandler = () => navigation.push('SignUp');
+
+  const searchTeachers = textSearched => {
+    navigation.navigate('Home', {
+      screen: 'SearchTeachers',
+      params: {text: textSearched},
+    });
+  };
 
   useEffect(() => {
     load();
@@ -88,8 +96,8 @@ export const HomeScreen = () => {
               style={{
                 paddingHorizontal: 20,
                 paddingVertical: 10,
-                ...fonts.cairoBold,
                 alignSelf: 'flex-start',
+                ...fonts.cairoBold,
               }}>
               {t('home:popular-subject')}
             </Text>
@@ -196,6 +204,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 1.84,
     elevation: 3,
+    color: 'black',
   },
   inputIcon: {
     marginRight: 20,

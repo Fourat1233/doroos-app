@@ -13,7 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useCurrentLocation, usePaginatedFetch} from '../shared/hooks';
 import LinearGradient from 'react-native-linear-gradient';
 
-export default TeachersListMapsComponent = () => {
+export default function TeachersListMapsComponent() {
   const mapViewRef = useRef();
   const currentPosition = useCurrentLocation();
 
@@ -77,7 +77,7 @@ export default TeachersListMapsComponent = () => {
           provider={PROVIDER_GOOGLE}
           zoomEnabled={true}
           showsUserLocation={true}
-          showsMyLocationButton={true}
+          showsMyLocationButton={false}
           ref={mapViewRef}
           followUserLocation={true}
           onMapReady={mapLoadedHandler}
@@ -88,7 +88,7 @@ export default TeachersListMapsComponent = () => {
       </SafeAreaView>
     </LinearGradient>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 1.84,
     elevation: 3,
+    color: 'black',
   },
   inputIcon: {
     marginRight: 20,

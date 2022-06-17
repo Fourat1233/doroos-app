@@ -18,16 +18,27 @@ import {AuthContext} from '../context';
 import LinearGradient from 'react-native-linear-gradient';
 import {useTranslation} from 'react-i18next';
 import {login} from '../../shared/hooks';
+import Snackbar from 'react-native-snackbar';
 
-export default SignInComponent = () => {
+export default function SignInComponent() {
   const authStore = useContext(AuthContext);
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const {t, i18n} = useTranslation();
 
   const _handleSubmit = async ({contact_point, password}) => {
+    setLoading(true);
     console.log(contact_point, ' ', password);
-    await login(contact_point, password);
+    let error = await login(contact_point, password);
+    if (error) {
+      setLoading(false);
+      Snackbar.show({
+        text: error,
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: 'red',
+      });
+      return;
+    }
     navigation.navigate('Main');
   };
 
@@ -222,7 +233,7 @@ export default SignInComponent = () => {
       </SafeAreaView>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

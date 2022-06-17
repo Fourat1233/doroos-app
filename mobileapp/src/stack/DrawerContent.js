@@ -9,15 +9,19 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {colors, fonts} from '../assets/styles/theme';
 import {useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useTranslation} from 'react-i18next';
 import RNRestart from 'react-native-restart';
+import {useDispatch} from 'react-redux';
+import {setDrawerOpen} from '../redux/slices/generalSlice';
 
 export function DrawerContent(props) {
   const [user, setUser] = useState(null);
   const [language, setLanguage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
   const navigation = useNavigation();
   const {t, i18n} = useTranslation();
+  const dispatch = useDispatch();
 
   const STORAGE_KEY = '@APP:languageCode';
 
@@ -45,13 +49,16 @@ export function DrawerContent(props) {
       const l = await AsyncStorage.getItem(STORAGE_KEY);
       setLanguage(l);
       let user = await AsyncStorage.getItem('user');
+      console.log('----------------------------------------');
+      console.log(JSON.parse(user));
+      console.log('----------------------------------------');
       if (user) {
         setUser(JSON.parse(user));
       }
     })();
   }, []);
 
-  changePicture = async () => {
+  const changePicture = async () => {
     if (Platform.OS === 'android') {
       try {
         const pickedResponse = await ImagePicker.openPicker({
@@ -179,6 +186,7 @@ export function DrawerContent(props) {
                 }}
                 onPress={() => {
                   navigation.navigate('Home', {screen: 'Profile'});
+                  dispatch(setDrawerOpen(false));
                 }}
               />
             ) : null}
@@ -193,6 +201,7 @@ export function DrawerContent(props) {
                 }}
                 onPress={() => {
                   navigation.navigate('CreateProfile', {screen: 'FirstStep'});
+                  dispatch(setDrawerOpen(false));
                 }}
               />
             ) : null}
@@ -207,6 +216,7 @@ export function DrawerContent(props) {
                 }}
                 onPress={() => {
                   console.log(2);
+                  dispatch(setDrawerOpen(false));
                 }}
               />
             ) : null}
@@ -220,10 +230,11 @@ export function DrawerContent(props) {
                   ...fonts.cairoSemiBold,
                 }}
                 onPress={() => {
-                  while(navigation.canGoBack()){
-                    navigation.goBack()
+                  while (navigation.canGoBack()) {
+                    navigation.goBack();
                   }
                   navigation.navigate('SignIn');
+                  dispatch(setDrawerOpen(false));
                 }}
               />
             ) : null}
@@ -238,6 +249,7 @@ export function DrawerContent(props) {
                 }}
                 onPress={() => {
                   navigation.navigate('SignUp');
+                  dispatch(setDrawerOpen(false));
                 }}
               />
             ) : null}
@@ -251,6 +263,7 @@ export function DrawerContent(props) {
               }}
               onPress={() => {
                 navigation.navigate('Home', {screen: 'Contact'});
+                dispatch(setDrawerOpen(false));
               }}
             />
             <DrawerItem

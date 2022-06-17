@@ -3,6 +3,7 @@ import {View, StyleSheet, FlatList, RefreshControl} from 'react-native';
 import {colors, fonts} from '../../../assets/styles/theme';
 import {usePaginatedFetch} from '../../shared/hooks';
 import {Teacher} from '../components/Teacher';
+//import GetLocation from 'react-native-get-location';
 
 export const NearbyScene = () => {
   const {
@@ -25,13 +26,22 @@ export const NearbyScene = () => {
   const onRefreshHandler = useCallback(() => {
     setRefreshing(true);
     setItems([]);
-    load();
+    setup();
     setRefreshing(false);
   }, []);
 
   useEffect(() => {
-    load();
+    setup();
   }, []);
+
+  const setup = async () => {
+    let currentLocation;
+    // let currentLocation = await GetLocation.getCurrentPosition({
+    //   enableHighAccuracy: true,
+    //   timeout: 15000,
+    // });
+    load();
+  };
 
   return (
     <FlatList

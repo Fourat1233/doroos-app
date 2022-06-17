@@ -121,7 +121,6 @@ export const SearchScreen = () => {
       />
       <View style={styles.screenContainer}>
         <View style={styles.textInputContainer}>
-          <Text>{searchTerm}</Text>
           <TextInput
             placeholder={t('search:key')}
             placeholderTextColor="#c2c0c8"
@@ -229,6 +228,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 1.84,
     elevation: 3,
+    color: 'black',
   },
   inputIcon: {
     marginRight: 20,

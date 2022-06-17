@@ -11,6 +11,8 @@ import {Text} from 'react-native';
 import AppStack from './src/stack/AppStack';
 import 'intl-pluralrules';
 import './src/I18n/index';
+import store from './src/redux/store';
+import {Provider} from 'react-redux';
 
 import {LogBox} from 'react-native';
 
@@ -21,7 +23,9 @@ LogBox.ignoreLogs([
 const App = () => {
   return (
     <Suspense fallback={<Text>loading...</Text>}>
-      <AppStack />
+      <Provider store={store}>
+        <AppStack />
+      </Provider>
     </Suspense>
   );
 };

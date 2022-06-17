@@ -25,8 +25,10 @@ import FourthStepComponent from '../screens/CreateProfile/FourthStepScreen';
 import {SearchProvider} from '../screens/Search/context';
 import Drawer from 'react-native-drawer';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useTranslation} from 'react-i18next';
+import {useSelector, useDispatch} from 'react-redux';
+import {setDrawerOpen, selectDrawerOpen} from '../redux/slices/generalSlice';
 
 const MainStack = createStackNavigator();
 const Stack = createStackNavigator();
@@ -316,9 +318,10 @@ function NavigationTabs() {
 //   );
 // }
 
-export default NavigationStack = () => {
-  const [open, setOpen] = useState(false);
+export default function NavigationStack() {
+  const dispatch = useDispatch();
   const [language, setLanguage] = useState('en');
+  const open = useSelector(selectDrawerOpen);
 
   const STORAGE_KEY = '@APP:languageCode';
 
@@ -335,19 +338,16 @@ export default NavigationStack = () => {
     <GestureRecognizer
       style={{flex: 1}}
       onSwipeRight={() => {
-        console.log('test');
-        console.log(language);
-        console.log('test');
-        if (language === 'en') setOpen(true);
+        if (language === 'en') dispatch(setDrawerOpen(true));
       }}
       onSwipeLeft={() => {
-        if (language === 'ar') setOpen(true);
+        if (language === 'ar') dispatch(setDrawerOpen(true));
       }}>
       <Drawer
         onClose={() => {
-          setOpen(false);
+          dispatch(setDrawerOpen(false));
         }}
-        content={<DrawerContent />}
+        content={<DrawerContent key={open} />}
         tapToClose={true}
         openDrawerOffset={0.3}
         open={open}>
@@ -355,4 +355,4 @@ export default NavigationStack = () => {
       </Drawer>
     </GestureRecognizer>
   );
-};
+}

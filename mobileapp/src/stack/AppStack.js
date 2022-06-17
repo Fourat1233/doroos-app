@@ -6,7 +6,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {OnboardingComponent} from '../screens/Welcome/OnboardingScreen';
 import {navigationRef} from '../services/NavigationService';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import SignUpScreen from '../screens/AuthScreens/SignUp/SignUpScreen';
 import SignInScreen from '../screens/AuthScreens/SignIn/SignInScreen';
 import LinearGradient from 'react-native-linear-gradient';

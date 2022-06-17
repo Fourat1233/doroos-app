@@ -15,7 +15,7 @@ import SliderEntry from './components/SliderEntry';
 import styles, {colors} from './styles/index.style';
 import {ENTRIES1} from './static/entries';
 import {fonts} from '../../assets/styles/theme';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SLIDER_1_FIRST_ITEM = 1;
 
