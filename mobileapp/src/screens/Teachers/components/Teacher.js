@@ -33,7 +33,11 @@ export const Teacher = React.memo(({teacher}) => (
     <View style={styles.cardBody}>
       <Text style={styles.title}>{teacher.full_name}</Text>
       <Subject
-        names={teacher.subjects.map(subject => subject.name).join(', ')}
+        names={
+          teacher.subjects
+            ? teacher.subjects.map(subject => subject.name).join(', ')
+            : []
+        }
       />
       <View style={styles.phoneContainer}>
         <FontAwesome name="phone-square" color={colors.base} size={18} />

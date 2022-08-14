@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -18,70 +18,34 @@ import {useLoadOneFetch} from '../shared/hooks';
 import {Spinner} from '../shared/components';
 import AvatarImage from '../../assets/images/profile_icons/4.png';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const initialLayout = {width: Dimensions.get('window').width};
-
-export const Subject = React.memo(({names}) => {
-  return (
-    <Text numberOfLines={1} ellipsizeMode={'tail'} style={styles.subjects}>
-      {names}
-    </Text>
-  );
-});
-
-export const Avatar = ({avatar, userId}) => {
+export const Avatar = ({avatar}) => {
   return (
     <ImagePlaceholder
       style={styles.avatar}
       source={{
-        uri: `http://143.110.210.169:8000/uploads/teachers/${userId}/${avatar}`,
+        uri: avatar,
       }}
       placeholderSource={AvatarImage}
     />
   );
 };
 
-export default function ProfileComponent({route}) {
-  const teacherId = route.params?.teacherId;
-  console.log(teacherId);
-
-  const {
-    load,
-    loading,
-    data: teacher,
-  } = useLoadOneFetch(`teachers/load_one/${teacherId}`);
-
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    {key: 'about', title: 'About'},
-    {key: 'contact', title: 'Contact'},
-  ]);
+export function UserProfileScreen({route}) {
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (teacherId) {
-      load();
-    }
+    setup();
   }, []);
 
-  const renderScene = ({route}) => {
-    switch (route.key) {
-      case 'about':
-        return <AboutTeacherComponent />;
-      case 'contact':
-        return <ContactTeacherComponent />;
-      default:
-        return null;
-    }
+  const setup = async () => {
+    let user = await AsyncStorage.getItem('user');
+    setUser(JSON.parse(user));
+    console.log('testtttt');
+    console.log(user);
+    console.log('testtttt');
   };
-
-  const renderTabBar = props => (
-    <TabBar
-      {...props}
-      labelStyle={{color: 'black', ...fonts.light}}
-      indicatorStyle={{backgroundColor: colors.base}}
-      style={{backgroundColor: 'white'}}
-    />
-  );
 
   return (
     <View style={styles.container}>
@@ -92,7 +56,7 @@ export default function ProfileComponent({route}) {
         style={styles.gradient}
       />
       <SafeAreaView style={styles.body}>
-        {loading ? (
+        {!user ? (
           <Spinner />
         ) : (
           <ScrollView
@@ -107,22 +71,22 @@ export default function ProfileComponent({route}) {
                 marginTop: 0,
                 justifyContent: 'flex-start',
               }}>
-              <Avatar avatar={teacher.profile_image} userId={teacher.user_id} />
+              <Avatar avatar={user.profile_image} />
               <View style={{marginLeft: 10}}>
                 <Text style={{...fonts.bold, fontSize: 16, color: 'black'}}>
-                  {teacher.user.full_name}
+                  {user.full_name}
                 </Text>
-                <Subject
-                  names={teacher.subjects
-                    .map(subject => subject.name)
-                    .join(', ')}
-                />
+                <Text
+                  style={{
+                    ...fonts.light,
+                    fontSize: 16,
+                    marginTop: 5,
+                    ...fonts.light,
+                    color: colors.base,
+                  }}>
+                  {user.email}
+                </Text>
                 <View style={{flexDirection: 'row', marginTop: 15}}>
-                  <Fontisto
-                    name="map-marker-alt"
-                    color={colors.grey.placeholder}
-                    size={18}
-                  />
                   <Text
                     style={{
                       ...fonts.light,
@@ -130,26 +94,10 @@ export default function ProfileComponent({route}) {
                       marginLeft: 5,
                       color: colors.grey.placeholder,
                     }}>
-                    {teacher.state}, {teacher.city}
+                    {user.user_type.split('\\')[1]}
                   </Text>
                 </View>
               </View>
-            </View>
-            <View style={{flex: 1}}>
-              <View
-                style={{
-                  borderColor: '#E8E8E8',
-                  borderWidth: 0.4,
-                  marginTop: 15,
-                }}
-              />
-              <TabView
-                renderTabBar={renderTabBar}
-                navigationState={{index, routes}}
-                renderScene={renderScene}
-                onIndexChange={setIndex}
-                initialLayout={initialLayout}
-              />
             </View>
           </ScrollView>
         )}

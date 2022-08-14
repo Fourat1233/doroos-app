@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,12 +11,23 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {colors, fonts} from '../../../assets/styles/theme';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width} = Dimensions.get('window');
 
 export const Subjects = ({subjects}) => {
   const {t, i18n} = useTranslation();
   const navigation = useNavigation();
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    (async () => {
+      let user = await AsyncStorage.getItem('user');
+      if (user) {
+        setUser(JSON.parse(user));
+      }
+    })();
+  }, []);
 
   return (
     <View style={{marginLeft: 10}}>
@@ -25,19 +36,23 @@ export const Subjects = ({subjects}) => {
           <TouchableOpacity
             key={elm.id}
             style={styles.cardTop}
-            onPress={() =>
-              navigation.navigate('List', {
-                screen: 'BySubject',
-                params: {
-                  subjectId: elm.id,
-                  subjectName: elm.name,
-                },
-              })
-            }>
+            onPress={() => {
+              if (user) {
+                navigation.navigate('List', {
+                  screen: 'BySubject',
+                  params: {
+                    subjectId: elm.id,
+                    subjectName: elm.name,
+                  },
+                });
+              } else {
+                navigation.navigate('SignIn');
+              }
+            }}>
             <Image
               style={[styles.picture, {padding: 20}]}
               source={{
-                uri: `http://143.110.210.169:8000/uploads/subjects/${elm.icon_url}`,
+                uri: `http://doroosapp.com/uploads/subjects/${elm.icon_url}`,
               }}
             />
             <Text

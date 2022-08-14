@@ -107,11 +107,12 @@ export function DrawerContent(props) {
             <View style={styles.userInfoSection}>
               <View style={{flexDirection: 'row', marginTop: 15}}>
                 <TouchableOpacity
+                  disabled
                   style={{paddingRight: 5, marginBottom: 5}}
                   onPress={() => changePicture()}>
                   <Avatar.Image
                     source={{
-                      uri: `https://api.adorable.io/avatars/50/abott@adorable.png`,
+                      uri: `https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png`,
                     }}
                     size={50}
                   />
@@ -126,6 +127,7 @@ export function DrawerContent(props) {
                       position: 'absolute',
                       right: 0,
                       bottom: -5,
+                      display: 'none',
                     }}>
                     <Entypo name="camera" color={colors.white} size={12} />
                   </View>
@@ -185,22 +187,7 @@ export function DrawerContent(props) {
                   ...fonts.cairoSemiBold,
                 }}
                 onPress={() => {
-                  navigation.navigate('Home', {screen: 'Profile'});
-                  dispatch(setDrawerOpen(false));
-                }}
-              />
-            ) : null}
-            {user ? (
-              <DrawerItem
-                icon={({color}) => (
-                  <Feather name="user-plus" color={color} size={18} />
-                )}
-                label={t('drawer:create')}
-                labelStyle={{
-                  ...fonts.cairoSemiBold,
-                }}
-                onPress={() => {
-                  navigation.navigate('CreateProfile', {screen: 'FirstStep'});
+                  navigation.navigate('Home', {screen: 'UserProfile'});
                   dispatch(setDrawerOpen(false));
                 }}
               />
@@ -215,7 +202,7 @@ export function DrawerContent(props) {
                   ...fonts.cairoSemiBold,
                 }}
                 onPress={() => {
-                  console.log(2);
+                  navigation.navigate('Home', {screen: 'Password'});
                   dispatch(setDrawerOpen(false));
                 }}
               />

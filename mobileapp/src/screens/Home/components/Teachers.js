@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,10 +12,10 @@ import {colors, fonts} from '../../../assets/styles/theme';
 import {AirbnbRating} from 'react-native-ratings';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import FastImage from 'react-native-fast-image';
 import {useNavigation} from '@react-navigation/native';
 import AvatarImage from '../../../assets/images/profile_icons/4.png';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width} = Dimensions.get('window');
 
@@ -47,7 +47,9 @@ const Avatar = ({path, image}) => {
 };
 
 export const Teachers = React.memo(({teachers, loading}) => {
+  console.log(teachers)
   const {navigate} = useNavigation();
+
   return (
     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
       {teachers.map(teacher => (
@@ -55,7 +57,14 @@ export const Teachers = React.memo(({teachers, loading}) => {
           <TouchableOpacity
             style={styles.cardTop}
             key={teacher.teacher_id}
-            onPress={() => navigate('Profile', {teacherId: teacher.user_id})}>
+            onPress={async () => {
+              let user = await AsyncStorage.getItem('user');
+              if (user) {
+                navigate('Profile', {teacherId: teacher.user_id});
+              } else {
+                navigate('SignIn');
+              }
+            }}>
             <Image
               source={{
                 uri: 'https://cdn.dnaindia.com/sites/default/files/styles/third/public/2019/09/15/868152-education-istock-091119.jpg',
@@ -90,7 +99,7 @@ export const Teachers = React.memo(({teachers, loading}) => {
                     color: colors.grey.placeholder,
                     marginTop: 5,
                   }}>
-                  Subject
+                  {teacher.city}
                 </Text>
               </View>
               <View style={{paddingTop: 7, paddingRight: 5}}>

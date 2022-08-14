@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -8,33 +8,49 @@ import {
 } from 'react-native';
 import {colors, INPUT_HEIGHT} from '../../assets/styles/theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useCurrentLocation, usePaginatedFetch} from '../shared/hooks';
+import {useCurrentLocation, useNormalFetch} from '../shared/hooks';
 import LinearGradient from 'react-native-linear-gradient';
 
 export default function TeachersListMapsComponent() {
   const mapViewRef = useRef();
   const currentPosition = useCurrentLocation();
 
-  const {
-    items: teachers,
-    load,
-    loading,
-    hasMore,
-  } = usePaginatedFetch('teachers/load_all');
+  const {items: teachers, load, loading} = useNormalFetch('teachers/load_all');
+  const [markers, setMarkers] = useState([]);
 
   useEffect(() => {
     if (currentPosition) {
       mapViewRef.current.animateToRegion(currentPosition, 1);
     }
+    load();
   }, [currentPosition]);
 
+  useEffect(() => {
+    console.log('teachers');
+    console.log(teachers);
+    console.log('teachers');
+    if (teachers)
+      setMarkers(
+        teachers.map((teacher, index) => (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: teacher.latitude,
+              longitude: teacher.longitude,
+            }}
+          />
+        )),
+      );
+  }, [teachers]);
+
   const mapMarkers = () => {
-    return teachers.map(teacher => (
-      <View key={teacher.id}>
-        <Text>{teacher.id}</Text>
-      </View>
+    return teachers.map((teacher, index) => (
+      <Marker
+        key={index}
+        coordinate={{latitude: teacher.latitude, longitude: teacher.longitude}}
+      />
     ));
   };
 
@@ -54,7 +70,7 @@ export default function TeachersListMapsComponent() {
       end={{x: 1.0, y: 1.0}}
       style={{...styles.gradient}}>
       <SafeAreaView style={styles.container}>
-        <View style={{zIndex: 9999, marginTop: 0}}>
+        <View style={{zIndex: 9999, marginTop: 10}}>
           <TextInput
             placeholder="Search teacher"
             placeholderTextColor="#c2c0c8"
@@ -83,7 +99,7 @@ export default function TeachersListMapsComponent() {
           onMapReady={mapLoadedHandler}
           style={styles.map}
           initialRegion={currentPosition}>
-          {mapMarkers()}
+          {markers}
         </MapView>
       </SafeAreaView>
     </LinearGradient>

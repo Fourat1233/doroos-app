@@ -61,13 +61,15 @@ class ImageLoad extends React.Component {
               {borderRadius: borderRadius},
               backgroundColor ? {backgroundColor: backgroundColor} : {},
             ]}>
-            {this.props.isShowActivity && !this.state.isError && (
-              <ActivityIndicator
-                style={styles.activityIndicator}
-                size={loadingStyle ? loadingStyle.size : 'small'}
-                color={loadingStyle ? loadingStyle.color : 'gray'}
-              />
-            )}
+            {this.state.isLoaded &&
+              this.props.isShowActivity &&
+              !this.state.isError && (
+                <ActivityIndicator
+                  style={styles.activityIndicator}
+                  size={loadingStyle ? loadingStyle.size : 'small'}
+                  color={loadingStyle ? loadingStyle.color : 'gray'}
+                />
+              )}
             <Image
               style={
                 placeholderStyle

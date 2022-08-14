@@ -40,6 +40,7 @@ const Title = ({text}) => {
         alignSelf: 'flex-start',
         paddingBottom: 3,
         paddingTop: 10,
+        color: 'black',
       }}>
       {t(text)}
     </Text>
@@ -69,6 +70,7 @@ export const SearchScreen = () => {
     loading,
     countData: resultCount,
   } = useSearchQueryFetch('teachers/search');
+
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
@@ -111,6 +113,8 @@ export const SearchScreen = () => {
     });
   }, [navigation]);
 
+  const handleSearch = () => {};
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -120,23 +124,23 @@ export const SearchScreen = () => {
         style={styles.gradient}
       />
       <View style={styles.screenContainer}>
-        <View style={styles.textInputContainer}>
-          <TextInput
-            placeholder={t('search:key')}
-            placeholderTextColor="#c2c0c8"
-            style={[
-              styles.textInput,
-              i18n.language === 'ar' ? {textAlign: 'right'} : '',
-            ]}
-            autoCorrect={false}
-            autoCapitalize={'none'}
-            multiline={false}
-            editable={true}
-            autoFocus={false}
-            onChangeText={setSearchTerm}
-          />
-        </View>
         <ScrollView>
+          <View style={styles.textInputContainer}>
+            <TextInput
+              placeholder={t('search:key')}
+              placeholderTextColor="#c2c0c8"
+              style={[
+                styles.textInput,
+                i18n.language === 'ar' ? {textAlign: 'right'} : '',
+              ]}
+              autoCorrect={false}
+              autoCapitalize={'none'}
+              multiline={false}
+              editable={true}
+              autoFocus={false}
+              onChangeText={setSearchTerm}
+            />
+          </View>
           <View>
             <Title text={'search:choose'} />
             <FieldWrapper>
@@ -170,10 +174,41 @@ export const SearchScreen = () => {
             </FieldWrapper>
           </View>
           <View>
-            <Title text={'search:pricing'} />
-            <FieldWrapper style={{marginTop: 10}}>
-              {/* <PricingRangeSlider /> */}
-            </FieldWrapper>
+            <TouchableOpacity
+              onPress={() => (!loading ? handleSearch() : null)}
+              style={{
+                marginTop: 20,
+                backgroundColor: '#6A2793',
+                padding: 12,
+                borderRadius: 40,
+                borderWidth: 0,
+                marginBottom: 50,
+              }}>
+              {/* <LinearGradient
+                    colors={['#e74295', '#7f509b']}
+                    start={{x: 0.0, y: 1.0}}
+                    end={{x: 1.0, y: 1.0}}
+                    style={[styles.gradient, {borderRadius: 20}]}
+                  /> */}
+              {loading ? (
+                <ActivityIndicator
+                  size={'small'}
+                  color={colors.white}
+                  animating={true}
+                />
+              ) : (
+                <Text
+                  style={{
+                    color: colors.white,
+                    alignSelf: 'center',
+                    ...fonts.cairoSemiBold,
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                  }}>
+                  {t('general:confirm')}
+                </Text>
+              )}
+            </TouchableOpacity>
           </View>
           {/* <TouchableOpacity style={[styles.searchButton]}>
                         {loading ?
@@ -181,6 +216,40 @@ export const SearchScreen = () => {
                             (<Text style={styles.searchButtonText}>{t('search:key')}{resultCount}</Text>)
                         }
                     </TouchableOpacity> */}
+
+          <View style={styles.teachersContainer}>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+            <Text style={{color: 'black'}}>Test</Text>
+          </View>
         </ScrollView>
       </View>
     </View>
@@ -200,6 +269,7 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     padding: 20,
     position: 'relative',
+    overflow: 'hidden',
   },
   gradient: {
     ...StyleSheet.absoluteFillObject,
@@ -257,5 +327,12 @@ const styles = StyleSheet.create({
     ...fonts.cairoSemiBold,
     alignSelf: 'center',
     fontSize: 18,
+  },
+  teachersContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+    backgroundColor: 'red',
+    marginBottom: 50,
   },
 });

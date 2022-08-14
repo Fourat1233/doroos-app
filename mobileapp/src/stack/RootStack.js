@@ -10,6 +10,8 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {colors} from '../assets/styles/theme';
 import {HomeScreen} from '../screens/Home/HomeScreen';
+import {UserProfileScreen} from '../screens/Home/UserProfileScreen';
+import {PasswordScreen} from '../screens/Home/PasswordScreen';
 import HomeSearchScreen from '../screens/Home/HomeSearchScreen';
 import TeachersScreen from '../screens/Teachers';
 import TeachersListMaps from '../screens/Teachers/TeachersListMaps';
@@ -92,12 +94,20 @@ function HomeStack() {
         }}
       />
       <Stack.Screen
-        name="CreateProfile"
+        name="UserProfile"
         options={{
-          headerShown: false,
+          headerBackground: headerBg,
           headerBackTitleVisible: false,
         }}
-        component={CreateProfileStack}
+        component={UserProfileScreen}
+      />
+      <Stack.Screen
+        name="Password"
+        options={{
+          headerBackground: headerBg,
+          headerBackTitleVisible: false,
+        }}
+        component={PasswordScreen}
       />
       <Stack.Screen
         name="SearchTeachers"

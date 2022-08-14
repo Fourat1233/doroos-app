@@ -1,10 +1,11 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text, Image, FlatList} from 'react-native';
 import {colors, fonts} from '../../../assets/styles/theme';
 import {RectButton} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {usePaginatedFetch} from '../../shared/hooks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const numColumns = 2;
 
@@ -51,16 +52,21 @@ export const SubjectsScene = () => {
         return (
           <RectButton
             style={[styles.item, {position: 'relative'}]}
-            onPress={() =>
-              navigation.navigate('BySubject', {
-                subjectId: item.id,
-                subjectName: item.name,
-              })
-            }>
+            onPress={async () => {
+              let user = await AsyncStorage.getItem('user');
+              if (user) {
+                navigation.navigate('BySubject', {
+                  subjectId: item.id,
+                  subjectName: item.name,
+                });
+              } else {
+                navigation.navigate('SignIn');
+              }
+            }}>
             <Image
               style={styles.icon}
               source={{
-                uri: `http://143.110.210.169:8000/uploads/subjects/${item.icon_url}`,
+                uri: `http://doroosapp.com/uploads/subjects/${item.icon_url}`,
               }}
             />
             <Text

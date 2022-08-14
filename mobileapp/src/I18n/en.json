@@ -26,6 +26,7 @@
     "no-account": "If you don't have an account create now.",
     "have-account": "If you already have an account connect now.",
     "password": "Password",
+    "confirm-password": "Confirm Password",
     "email": "Email",
     "name": "Full Name",
     "phone": "Phone Number",
@@ -50,5 +51,8 @@
     "2": "Nearby Teatchers",
     "3": "About",
     "4": "Contact"
+  },
+  "general": {
+    "confirm": "Confirm"
   }
 }

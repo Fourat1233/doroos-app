@@ -7,6 +7,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {TabView} from './components/TabView';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default TeachersListComponent = () => {
   const navigation = useNavigation();
@@ -32,7 +33,14 @@ export default TeachersListComponent = () => {
         <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
             style={{marginRight: 20}}
-            onPress={() => navigation.push('Maps')}>
+            onPress={async () => {
+              let user = await AsyncStorage.getItem('user');
+              if (user) {
+                navigation.push('Maps');
+              } else {
+                navigation.navigate('SignIn');
+              }
+            }}>
             <Fontisto name="map-marker-alt" color={colors.white} size={24} />
           </TouchableOpacity>
         </View>

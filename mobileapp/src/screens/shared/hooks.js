@@ -49,12 +49,6 @@ export const usePaginatedFetch = (uri, params) => {
       });
       if (response.status === 200) {
         fetched.current = true;
-        console.log('aaa');
-        console.log(typeof response.data);
-        console.log(response.data['data']);
-        console.log('aaa');
-        console.log(response.data);
-        console.log('aaa');
         setItems([...items, ...response.data.data]);
         if (response.data.next_page_url) {
           setNext(response.data.next_page_url);
@@ -65,7 +59,6 @@ export const usePaginatedFetch = (uri, params) => {
         throw new Error(response.status);
       }
     } catch (error) {
-      console.log('hey1');
       console.log(error);
     }
   }, [uri, next]);
@@ -76,6 +69,38 @@ export const usePaginatedFetch = (uri, params) => {
     load,
     loading,
     hasMore: next !== null,
+  };
+};
+
+export const useNearbyFetch = (lat, lang, radius) => {
+  var fetched = useRef(false);
+  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    if (fetched.current) {
+      fetched.current = false;
+      setLoading(false);
+    }
+  }, [items]);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      let response = await axiosInstance.get('/teachers/nearby', {
+        params: {lat, lang, ...(radius ? {radius} : {})},
+      });
+      fetched.current = true;
+      setItems(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [lat, lang, radius]);
+
+  return {
+    items,
+    load,
+    loading,
   };
 };
 
@@ -150,20 +175,17 @@ export const useLoadOneFetch = uri => {
     console.log(`${BASE_URL}/${uri}`);
     console.log('-----------------------------------------------------');
     setLoading(true);
-    const response = await fetch(`${BASE_URL}/${uri}`, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-    const responseData = await response.json();
-    if (response.ok) {
-      console.log(data);
-      setData(responseData['data']);
-    } else {
-      console.log(JSON.parse(responseData));
+    try {
+      const response = await axiosInstance.get(`${BASE_URL}/${uri}`);
+      console.log('response.data');
+      console.log(response.data['data']);
+      console.log('response.data');
+      setData(response.data['data']);
+    } catch {
+      console.log('error');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, [uri]);
 
   return {
