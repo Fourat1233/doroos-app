@@ -72,7 +72,7 @@ export const usePaginatedFetch = (uri, params) => {
   };
 };
 
-export const useNearbyFetch = (lat, lang, radius) => {
+export const useNearbyFetch = uri => {
   var fetched = useRef(false);
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
@@ -84,18 +84,22 @@ export const useNearbyFetch = (lat, lang, radius) => {
     }
   }, [items]);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    try {
-      let response = await axiosInstance.get('/teachers/nearby', {
-        params: {lat, lang, ...(radius ? {radius} : {})},
-      });
-      fetched.current = true;
-      setItems(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [lat, lang, radius]);
+  const load = useCallback(
+    async (lat, lang, radius) => {
+      setLoading(true);
+      try {
+        let response = await axiosInstance.get(uri, {
+          params: {lat, lang, ...(radius ? {radius} : {})},
+        });
+        fetched.current = true;
+        setItems(response.data);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
+    },
+    [uri],
+  );
 
   return {
     items,
@@ -119,11 +123,13 @@ export const usePopularFetch = uri => {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      let response = await axiosInstance.get(`/${uri}`);
+      let response = await axios.get(
+        'https://doroosapp.com/api/v1/load_popular',
+      );
+      //let response = await axiosInstance.get(`/${uri}`);
       fetched.current = true;
       setItems(response.data);
     } catch (error) {
-      console.log('hey2');
       console.log(error);
     }
   }, [uri]);
@@ -196,34 +202,36 @@ export const useLoadOneFetch = uri => {
 };
 
 export const useSearchQueryFetch = uri => {
+  var fetched = useRef(false);
   const [loading, setLoading] = useState(false);
-  const [countData, setCountData] = useState(0);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    if (fetched.current) {
+      fetched.current = false;
+      setLoading(false);
+    }
+  }, [items]);
 
   const load = useCallback(
-    async searchTerm => {
+    async (name, subjets, gender) => {
       setLoading(true);
-      const searcheQuery = `?q=${searchTerm}`;
-      const response = await fetch(`${BASE_URL}/${uri}${searcheQuery}`, {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      });
-      const responseData = await response.json();
-
-      if (response.ok) {
-        console.log(responseData['data']);
-        setCountData(responseData['data']);
-      } else {
-        console.log(responseData);
+      try {
+        let response = await axiosInstance.get(uri, {
+          params: {name, subjets, ...(gender ? {gender} : {})},
+        });
+        fetched.current = true;
+        setItems(response.data.data);
+      } catch (error) {
+        console.log('error');
+        setLoading(false);
       }
-      setLoading(false);
     },
     [uri],
   );
 
   return {
-    countData,
+    items,
     load,
     loading,
   };
@@ -295,23 +303,110 @@ export const login = async (contact_point, password) => {
       'user',
       JSON.stringify(response.data.current_user),
     );
-    console.log('--------------------------------------');
-    console.log(response.data);
-    console.log(response.data.current_user);
-    console.log('--------------------------------------');
     return false;
   } catch (error) {
-    console.log('hey3');
     console.log(error);
-    return error.message;
+    return error.response.data.message;
   }
 };
 
-export const register = async data => {
+export const register = async (path, data) => {
   try {
-    let response = await axiosInstance.post('/gate/sign_up', data);
+    let formData = new FormData();
+    Object.keys(data).forEach(key => {
+      formData.append(key, data[key]);
+    });
+    let response = await axiosInstance.post(path, formData);
+  } catch (error) {
+    console.log(error);
+    return error.response.data.message;
+  }
+};
+
+export const updatePassword = async data => {
+  try {
+    let response = await axiosInstance.post('/profile/change_password', data, {
+      headers: {Authorization: await AsyncStorage.getItem('token')},
+    });
+    console.log(response.data);
   } catch (error) {
     console.log('hey4');
     console.log(error);
+    console.log(error.response.data);
+    return error.response.data.message || error.response.data.error;
   }
+};
+
+export const useLocations = uri => {
+  var fetched = useRef(false);
+  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  useEffect(() => {
+    if (fetched.current) {
+      fetched.current = false;
+      setLoading(false);
+    }
+  }, [items]);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      let response = await axiosInstance.get(
+        '/teacher-account-info/loadAllLocations',
+      );
+      fetched.current = true;
+      setItems(response.data);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  }, [uri]);
+
+  return {
+    locations: items,
+    load,
+    loading,
+  };
+};
+
+export const useSubjects = uri => {
+  var fetched = useRef(false);
+  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  useEffect(() => {
+    if (fetched.current) {
+      fetched.current = false;
+      setLoading(false);
+    }
+  }, [items]);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      let response = await axiosInstance.get(
+        '/teacher-account-info/loadAllSubjects',
+      );
+      fetched.current = true;
+      setItems(response.data);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  }, [uri]);
+
+  return {
+    subjects: items,
+    load,
+    loading,
+  };
 };

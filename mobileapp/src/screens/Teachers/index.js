@@ -12,18 +12,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default TeachersListComponent = () => {
   const navigation = useNavigation();
 
+  const {t, i18n} = useTranslation();
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      // headerLeft: () => {
-      //     return (
-      //         <TouchableOpacity
-      //             style={{ paddingHorizontal: 15 }}
-      //             onPress={() => navigation.toggleDrawer()}
-      //         >
-      //             <Feather name="menu" color={colors.white} size={20} />
-      //         </TouchableOpacity>
-      //     )
-      // }
+      title: t('screens:teachers'),
     });
   }, [navigation]);
 

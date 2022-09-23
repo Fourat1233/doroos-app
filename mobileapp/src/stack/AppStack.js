@@ -46,6 +46,7 @@ const AppStack = () => {
     // initialRouteName={!firstAccess ? "Onboarding" : "Main"}
     <LinearGradient
       colors={['#e74595', '#7f519b']}
+      // colors={['#f9f6f6', '#fafafa']}
       start={{x: 0.0, y: 1.0}}
       end={{x: 1.0, y: 1.0}}
       style={{...styles.gradient, paddingTop: statusBarHeight}}>

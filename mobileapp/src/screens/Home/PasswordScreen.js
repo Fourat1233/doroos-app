@@ -17,7 +17,7 @@ import AppWrapper from '../../components/AppWrapper';
 import {AuthContext} from '../AuthScreens/context';
 import LinearGradient from 'react-native-linear-gradient';
 import {useTranslation} from 'react-i18next';
-import {login} from '../shared/hooks';
+import {login, updatePassword} from '../shared/hooks';
 import Snackbar from 'react-native-snackbar';
 
 export function PasswordScreen() {
@@ -26,19 +26,31 @@ export function PasswordScreen() {
   const [loading, setLoading] = useState(false);
   const {t, i18n} = useTranslation();
 
-  const _handleSubmit = async ({oldPassword, password, confirmPassword}) => {
+  const _handleSubmit = async (
+    {oldPassword, password, confirmPassword},
+    resetForm,
+  ) => {
     setLoading(true);
-    let error = false;
+    let error = await updatePassword({
+      old_password: oldPassword,
+      new_password: password,
+      new_password_confirmation: confirmPassword,
+    });
     if (error) {
-      setLoading(false);
       Snackbar.show({
         text: error,
         duration: Snackbar.LENGTH_SHORT,
         backgroundColor: 'red',
       });
-      return;
+    } else {
+      Snackbar.show({
+        text: 'Password updated successfully',
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: 'green',
+      });
     }
-    navigation.navigate('Main');
+    resetForm();
+    setLoading(false);
   };
 
   return (
@@ -59,8 +71,9 @@ export function PasswordScreen() {
           }}>
           <Formik
             initialValues={{oldPassword: '', confirmPassword: '', password: ''}}
-            onSubmit={values => _handleSubmit(values)}
+            onSubmit={(values, {resetForm}) => _handleSubmit(values, resetForm)}
             validationSchema={yup.object().shape({
+              oldPassword: yup.string().required(),
               confirmPassword: yup.string().required(),
               password: yup.string().required(),
             })}>

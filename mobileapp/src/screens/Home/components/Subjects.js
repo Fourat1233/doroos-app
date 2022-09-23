@@ -52,7 +52,7 @@ export const Subjects = ({subjects}) => {
             <Image
               style={[styles.picture, {padding: 20}]}
               source={{
-                uri: `http://doroosapp.com/uploads/subjects/${elm.icon_url}`,
+                uri: `https://doroosapp.com/uploads/subjects/${elm.icon_url}`,
               }}
             />
             <Text

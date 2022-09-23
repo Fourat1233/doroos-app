@@ -66,7 +66,7 @@ export const SubjectsScene = () => {
             <Image
               style={styles.icon}
               source={{
-                uri: `http://doroosapp.com/uploads/subjects/${item.icon_url}`,
+                uri: `https://doroosapp.com/uploads/subjects/${item.icon_url}`,
               }}
             />
             <Text

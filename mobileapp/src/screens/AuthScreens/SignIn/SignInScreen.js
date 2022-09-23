@@ -28,8 +28,7 @@ export default function SignInComponent() {
 
   const _handleSubmit = async ({contact_point, password}) => {
     setLoading(true);
-    console.log(contact_point, ' ', password);
-    let error = await login(contact_point, password);
+    let error = await login(contact_point?.trim(), password);
     if (error) {
       setLoading(false);
       Snackbar.show({

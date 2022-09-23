@@ -1,14 +1,14 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {View, StyleSheet, FlatList, RefreshControl} from 'react-native';
 import {colors, fonts} from '../../../assets/styles/theme';
-import {useNormalFetch} from '../../shared/hooks';
+import {useCurrentLocation, useNearbyFetch} from '../../shared/hooks';
 import {Teacher} from '../components/Teacher';
 import {useNavigation, StackActions} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import GetLocation from 'react-native-get-location';
 
 export const NearbyScene = () => {
-  const {items: teachers, load, loading} = useNormalFetch('teachers/load_all');
+  const {items: teachers, load, loading} = useNearbyFetch('/teachers/nearby');
+  const position = useCurrentLocation();
 
   const renderItem = ({item}) => <Teacher teacher={item} />;
 
@@ -17,9 +17,14 @@ export const NearbyScene = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    //setup();
-    load();
-  }, []);
+    if (position) setup();
+  }, [position]);
+
+  useEffect(() => {
+    console.log('teachers');
+    console.log(teachers);
+    console.log('teachers');
+  }, [teachers]);
 
   const formatData = (data, numColumns) => {
     let newData = [...data];
@@ -37,17 +42,14 @@ export const NearbyScene = () => {
   };
 
   const setup = async () => {
-    let currentLocation;
-    // let currentLocation = await GetLocation.getCurrentPosition({
-    //   enableHighAccuracy: true,
-    //   timeout: 15000,
-    // });
+    let {latitude, longitude} = position;
+    console.log(latitude, longitude);
     let user = await AsyncStorage.getItem('user');
     if (!user) {
       navigation.dispatch(StackActions.replace('SignIn'));
       return;
     }
-    load();
+    load(latitude, longitude, 1000);
   };
 
   return (

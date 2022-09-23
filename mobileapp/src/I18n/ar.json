@@ -1,12 +1,12 @@
 {
   "screens": {
-    "home": "الرئيسية",
+    "home": "استقبال",
     "search": "البحث",
     "profile": "الملف الشخصي",
     "teachers": "القائمة"
   },
   "home": {
-    "key": "الزئيسية",
+    "key": "استقبال",
     "popular-subject": "الاختصاصات الشائعة",
     "popular-teacher": "افضل الاساتذة"
   },
@@ -14,7 +14,8 @@
     "key": "ابحث الان",
     "choose": "اختر الاختصاص",
     "gender": "الجنس",
-    "pricing": "السعر"
+    "pricing": "السعر",
+    "areas": "مجالات التدريس"
   },
   "sign": {
     "sign-up": "انشاء حساب",
@@ -28,13 +29,22 @@
     "confirm-password": "تأكيد كلمة السر",
     "email": "البريد الالكتروني",
     "name": "الاسم اكامل",
+    "ar_name": "الاسم العربي",
     "phone": "الجوال",
     "type": "نوع الحساب",
     "gender": "الجنس",
     "student": "طالب",
     "teacher": "مدرس",
     "male": "ذكر",
-    "female": "انثى"
+    "female": "انثى",
+    "city": "المدينة",
+    "teaching-areas": "مجالات التدريس",
+    "subjects": "المواضيع",
+    "years-of-experience": "سنوات من الخبرة",
+    "pricing": "التسعير / ساعة",
+    "teaching-type": "نوع التدريس",
+    "teaching-level": "مستوى التدريس",
+    "business-hours": "ساعات العمل"
   },
   "drawer": {
     "welcome": "مرحبا بك في دروس",

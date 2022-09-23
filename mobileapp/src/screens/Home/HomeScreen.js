@@ -18,6 +18,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {usePopularFetch} from '../shared/hooks';
 import {Subjects} from './components/Subjects';
 import {Spinner} from '../shared/components';
+import {useLayoutEffect} from 'react';
 
 const {width} = Dimensions.get('window');
 
@@ -43,6 +44,12 @@ export const HomeScreen = () => {
   useEffect(() => {
     load();
   }, []);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: t('screens:home'),
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.container}>

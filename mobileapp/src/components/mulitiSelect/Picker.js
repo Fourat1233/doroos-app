@@ -15,9 +15,7 @@ import {useHeaderHeight} from '@react-navigation/elements';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useTranslation} from 'react-i18next';
 import {Item as ItemIcon} from 'react-navigation-header-buttons';
-
 import {colors, fonts, INPUT_HEIGHT} from '../../assets/styles/theme';
-import {usePaginatedFetch} from '../../screens/shared/hooks';
 
 const HeaderRight = ({onClickDone}) => (
   <ItemIcon title="done" buttonStyle={styles.button} onPress={onClickDone} />
@@ -44,7 +42,7 @@ const Item = React.memo(({item, onCheckItem, checked}) => {
             name="my-location"
             style={styles.locationIcon}
           />
-          <Text style={styles.title}>{item.name}</Text>
+          <Text style={styles.title}>{item.label}</Text>
         </View>
         <View style={[styles.checkBox, {backgroundColor: colors.base}]}>
           {checked && (
@@ -56,39 +54,39 @@ const Item = React.memo(({item, onCheckItem, checked}) => {
   );
 });
 
-const Picker = ({uri, onVisibleChange, onCheckedItems, defaultChecked}) => {
-  const {items, load, loading} = usePaginatedFetch(uri);
-  const [checkedItems, setCheckedItems] = useState(defaultChecked);
+const Picker = ({data, onVisibleChange, checked, setChecked}) => {
+  const [searchText, setSearchText] = useState('');
 
   const headerHeight = useHeaderHeight();
   const {t, i18n} = useTranslation();
 
-  useEffect(() => {
-    load();
-  }, []);
-
-  const exist = id => checkedItems.find(itm => itm.id === id);
+  const exist = id => checked.find(itm => itm === id) !== undefined;
 
   const checkItemHandler = item => {
     if (exist(item.id)) {
-      setCheckedItems(
-        checkedItems.filter(checkedItem => checkedItem.id !== item.id),
-      );
+      setChecked(checked.filter(checkedItem => checkedItem !== item.id));
     } else {
-      setCheckedItems([...checkedItems, item]);
+      setChecked([...checked, item.id]);
     }
   };
 
-  const renderItem = useCallback(({item}) => (
-    <Item item={item} onCheckItem={checkItemHandler} checked={exist(item.id)} />
-  ));
+  const renderItem = useCallback(
+    ({item}) => (
+      <Item
+        item={item}
+        onCheckItem={checkItemHandler}
+        checked={exist(item.id)}
+      />
+    ),
+    [exist, checkItemHandler],
+  );
 
   const doneClickHandler = () => {
-    onCheckedItems(checkedItems);
     onVisibleChange();
   };
   return (
     <Modal
+      statusBarTranslucent={true}
       animationType="slide"
       transparent={false}
       visible={true}
@@ -100,9 +98,9 @@ const Picker = ({uri, onVisibleChange, onCheckedItems, defaultChecked}) => {
         start={{x: 0.0, y: 1.0}}
         end={{x: 1.0, y: 1.0}}
         style={styles.gradient}>
-        <View style={{height: headerHeight}}>
+        <View style={{height: 100}}>
           <View style={{height: getStatusBarHeight()}} />
-          <HeaderActions height={headerHeight - getStatusBarHeight()}>
+          <HeaderActions height={100 - getStatusBarHeight()}>
             <HeaderLeft onClose={onVisibleChange} />
             <HeaderRight onClickDone={doneClickHandler} />
           </HeaderActions>
@@ -121,10 +119,14 @@ const Picker = ({uri, onVisibleChange, onCheckedItems, defaultChecked}) => {
               multiline={false}
               editable={true}
               autoFocus={false}
+              value={searchText}
+              onChangeText={value => setSearchText(value)}
             />
           </View>
           <FlatList
-            data={items}
+            data={data.filter(el =>
+              el.label.toLowerCase().includes(searchText.toLowerCase()),
+            )}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
             style={styles.flatlist}
@@ -172,6 +174,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 1.84,
     elevation: 3,
+    color: 'black',
   },
   flatlist: {
     paddingTop: 10,

@@ -16,13 +16,10 @@ import {CheckBoxItems} from './components/CheckBoxItems';
 import RadioForm from 'react-native-simple-radio-button';
 // import { PricingRangeSlider } from './components/range/PricingRangeSlider'
 import {ScrollView} from 'react-native-gesture-handler';
-import {
-  usePaginatedFetch,
-  useDebounce,
-  useSearchQueryFetch,
-} from '../shared/hooks';
+import {useDebounce, useSearchQueryFetch} from '../shared/hooks';
 import {FormPicker} from '../../components/forms';
 import {useSearchDispatch, SET_GENDER, useSearchState} from './context';
+import {Teacher} from '../Teachers/components/Teacher';
 
 var radio_props = [
   {label: 'All', value: 0},
@@ -68,11 +65,10 @@ export const SearchScreen = () => {
   const {
     load: loadFetchSearch,
     loading,
-    countData: resultCount,
-  } = useSearchQueryFetch('teachers/search');
+    items: teachers,
+  } = useSearchQueryFetch('/teachers/filter');
 
   const [searchTerm, setSearchTerm] = useState('');
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const [subjects, setSubjectItem] = useState([]);
 
@@ -88,14 +84,6 @@ export const SearchScreen = () => {
 
   const pressGenderHandler = value =>
     dispatch({type: SET_GENDER, payload: value});
-
-  useEffect(() => {
-    if (isMounted.current && debouncedSearchTerm !== '') {
-      loadFetchSearch(debouncedSearchTerm);
-    } else {
-      isMounted.current = true;
-    }
-  }, [debouncedSearchTerm]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -113,7 +101,13 @@ export const SearchScreen = () => {
     });
   }, [navigation]);
 
-  const handleSearch = () => {};
+  const handleSearch = () => {
+    loadFetchSearch(
+      searchTerm,
+      subjects,
+      gender === 1 ? 'Male' : gender === 2 ? 'Female' : null,
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -145,15 +139,8 @@ export const SearchScreen = () => {
             <Title text={'search:choose'} />
             <FieldWrapper>
               <FormPicker
-                checkedItems={subjects}
                 onCheckItemHandler={id => setSubjectItem([...subjects, id])}
               />
-            </FieldWrapper>
-          </View>
-          <View>
-            <Title text={'search:areas'} />
-            <FieldWrapper>
-              <FormPicker />
             </FieldWrapper>
           </View>
           <View>
@@ -218,37 +205,9 @@ export const SearchScreen = () => {
                     </TouchableOpacity> */}
 
           <View style={styles.teachersContainer}>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
-            <Text style={{color: 'black'}}>Test</Text>
+            {teachers.map((teacher, index) => (
+              <Teacher key={`t-${index}`} teacher={teacher} />
+            ))}
           </View>
         </ScrollView>
       </View>
@@ -329,10 +288,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   teachersContainer: {
+    backgroundColor:'white',
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-    backgroundColor: 'red',
     marginBottom: 50,
+    paddingBottom: 1,
   },
 });

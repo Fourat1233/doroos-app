@@ -34,7 +34,7 @@ export const Avatar = ({avatar, userId}) => {
     <ImagePlaceholder
       style={styles.avatar}
       source={{
-        uri: `http://143.110.210.169:8000/uploads/teachers/${userId}/${avatar}`,
+        uri: `https://doroosapp.com/uploads/teachers/${userId}/${avatar}`,
       }}
       placeholderSource={AvatarImage}
     />

@@ -3,7 +3,6 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import {AirbnbRating} from 'react-native-ratings';
 import {colors, fonts} from '../../../assets/styles/theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {color} from 'react-native-reanimated';
 import AvatarImage from '../../../assets/images/profile_icons/4.png';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
 
@@ -20,43 +19,54 @@ export const Avatar = ({avatar, userId}) => {
     <ImagePlaceholder
       style={styles.avatar}
       source={{
-        uri: `http://143.110.210.169:8000/uploads/teachers/${userId}/${avatar}`,
+        uri: `https://doroosapp.com/uploads/teachers/${userId}/${avatar}`,
       }}
       placeholderSource={AvatarImage}
     />
   );
 };
 
-export const Teacher = React.memo(({teacher}) => (
-  <View style={styles.card}>
-    <Avatar avatar={teacher.profile_image} userId={teacher.userId} />
-    <View style={styles.cardBody}>
-      <Text style={styles.title}>{teacher.full_name}</Text>
-      <Subject
-        names={
-          teacher.subjects
-            ? teacher.subjects.map(subject => subject.name).join(', ')
-            : []
+export const Teacher = React.memo(({teacher}) => {
+  return (
+    <View style={styles.card}>
+      <Avatar
+        avatar={
+          teacher.user ? teacher.user.profile_image : teacher.profile_image
         }
+        userId={teacher.user ? teacher.user.id : teacher.id}
       />
-      <View style={styles.phoneContainer}>
-        <FontAwesome name="phone-square" color={colors.base} size={18} />
-        <Text style={styles.phone}>{teacher.phone_cell}</Text>
-      </View>
-    </View>
-    <View style={styles.cardFooter}>
-      <Text style={styles.ratingTitle}>4.5</Text>
-      <View style={styles.ratingItems}>
-        <AirbnbRating
-          showRating={false}
-          size={16}
-          count={1}
-          selectedColor="#F5A623"
+      <View style={styles.cardBody}>
+        <Text style={styles.title}>
+          {teacher.user ? teacher.user.full_name : teacher.full_name}
+        </Text>
+        <Subject
+          names={
+            teacher.subjects
+              ? teacher.subjects.map(subject => subject.name).join(', ')
+              : []
+          }
         />
+        <View style={styles.phoneContainer}>
+          <FontAwesome name="phone-square" color={colors.base} size={18} />
+          <Text style={styles.phone}>
+            {teacher.user ? teacher.user.phone_cell : teacher.phone_cell}
+          </Text>
+        </View>
+      </View>
+      <View style={styles.cardFooter}>
+        <Text style={styles.ratingTitle}>4.5</Text>
+        <View style={styles.ratingItems}>
+          <AirbnbRating
+            showRating={false}
+            size={16}
+            count={1}
+            selectedColor="#F5A623"
+          />
+        </View>
       </View>
     </View>
-  </View>
-));
+  );
+});
 
 const styles = StyleSheet.create({
   card: {

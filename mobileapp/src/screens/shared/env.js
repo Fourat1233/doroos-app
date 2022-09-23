@@ -1,1 +1,1 @@
-export const BASE_URL = 'http://doroosapp.com/api/v1';
+export const BASE_URL = 'https://doroosapp.com/api/v1';

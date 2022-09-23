@@ -36,7 +36,7 @@ const Avatar = ({path, image}) => {
     <ImagePlaceholder
       style={styles.avatar}
       source={{
-        uri: `http://143.110.210.169:8000/${path}/${image}`,
+        uri: `https://doroosapp.com/${path}/${image}`,
       }}
       placeholderSource={AvatarImage}
       // placeholderSource={{

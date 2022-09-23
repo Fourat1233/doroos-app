@@ -22,7 +22,7 @@ const PickerItem = ({item, onRemoveItem}) => {
       onPress={() => onRemoveItem(item.id)}
       style={styles.checkBoxItem}>
       <View style={styles.checkBoxItem}>
-        <Text style={styles.text}>{item.name}</Text>
+        <Text style={styles.text}>{item.label}</Text>
         <View style={[styles.iconContainer, {backgroundColor: '#ff7979'}]}>
           <Feather name="x" color={colors.white} size={18} />
         </View>
@@ -31,20 +31,14 @@ const PickerItem = ({item, onRemoveItem}) => {
   );
 };
 
-const AppFormPicker = ({onCheckItemHandler}) => {
+const MultiSelect = ({data, checked, setChecked}) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [items, setItems] = useState([]);
   const scrollView = useRef();
 
   const toggleModal = useCallback(() => setModalVisible(visible => !visible));
 
-  const checkedHandler = items => {
-    setItems(items);
-    onCheckItemHandler(items);
-  };
-
   const removeItemHandler = id => {
-    setItems(items.filter(item => item.id !== id));
+    setChecked(checked.filter(item => item !== id));
   };
 
   return (
@@ -57,9 +51,9 @@ const AppFormPicker = ({onCheckItemHandler}) => {
         onContentSizeChange={() => scrollView.current.scrollToEnd()}
         ref={scrollView}>
         <View style={styles.checkBoxItems}>
-          {items.map((item, index) => (
+          {checked.map((item, index) => (
             <PickerItem
-              item={item}
+              item={data.find(el => el.id === item)}
               key={index}
               onRemoveItem={removeItemHandler}
             />
@@ -78,9 +72,9 @@ const AppFormPicker = ({onCheckItemHandler}) => {
       </ScrollView>
       {modalVisible && (
         <Picker
-          defaultChecked={items}
-          uri="subjects/load_all"
-          onCheckedItems={checkedHandler}
+          checked={checked}
+          data={data}
+          setChecked={setChecked}
           onVisibleChange={() => setModalVisible(false)}
         />
       )}
@@ -183,4 +177,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppFormPicker;
+export default MultiSelect;

@@ -29,13 +29,22 @@
     "confirm-password": "Confirm Password",
     "email": "Email",
     "name": "Full Name",
+    "ar_name": "Arabic Name",
     "phone": "Phone Number",
     "type": "Account Type",
     "gender": "Gender",
     "student": "Student",
     "teacher": "Teacher",
     "male": "Male",
-    "female": "Female"
+    "female": "Female",
+    "city": "City",
+    "teaching-areas": "Teaching Areas",
+    "subjects": "Subjects",
+    "years-of-experience": "Years of experience",
+    "pricing": "Pricing/Hour",
+    "teaching-type": "Teaching Type",
+    "teaching-level": "Teaching Level",
+    "business-hours": "Buisness Hours"
   },
   "drawer": {
     "welcome": "Welcome To Doroos App",
